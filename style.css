@@ -1,0 +1,1800 @@
+
+    /* ══════════════════════════════════════════════════════════════
+       VARIABLES CSS GLOBALES (Custom Properties)
+       ══════════════════════════════════════════════════════════════
+       Acá definís los valores que se repiten en todo el sitio.
+       Si querés cambiar un color, fuente o espaciado → cambialo UNA
+       sola vez acá y se actualiza automáticamente en toda la página.
+
+       PALETA DE COLORES:
+       --color-black      → Negro principal (fondo oscuro, texto)
+       --color-white      → Blanco principal (fondo claro, texto inverso)
+       --color-gray-*     → Escala de grises para detalles sutiles
+       --color-accent     → Gris muy oscuro para detalles de acento
+
+       TIPOGRAFÍAS:
+       --font-main        → Fuente principal (Inter) para textos generales
+       --font-display     → Fuente de display (Playfair) para títulos grandes
+
+       TRANSICIONES:
+       --transition-fast  → Animaciones rápidas (hover, botones)
+       --transition-med   → Animaciones medias (paneles, cards)
+    ════════════════════════════════════════════════════════════════ */
+    :root {
+      /* Colores principales */
+      --color-black:     #000000;
+      --color-white:     #FFFFFF;
+
+      /* Grises (numerados de más claro a más oscuro) */
+      --color-gray-50:   #FAFAFA;   /* Casi blanco — fondos de secciones */
+      --color-gray-100:  #F5F5F5;   /* Gris muy suave — fondos alternativos */
+      --color-gray-200:  #E8E8E8;   /* Bordes y separadores */
+      --color-gray-300:  #D0D0D0;   /* Bordes más visibles */
+      --color-gray-400:  #AAAAAA;   /* Texto secundario claro */
+      --color-gray-600:  #666666;   /* Texto secundario legible */
+      --color-gray-800:  #222222;   /* Texto oscuro (casi negro) */
+      --color-gray-900:  #111111;   /* Negro suavizado */
+
+      /* Tipografías */
+      --font-main:    'Inter', sans-serif;
+      --font-display: 'Playfair Display', serif;
+
+      /* Velocidades de transición/animación */
+      --transition-fast: 0.2s ease;
+      --transition-med:  0.4s ease;
+      --transition-slow: 0.6s ease;
+
+      /* Tamaños máximos de contenido */
+      --max-width: 1400px;         /* Ancho máximo del contenido centrado */
+      --max-width-narrow: 900px;   /* Para secciones de texto estrechas */
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       RESET CSS
+       ══════════════════════════════════════════════════════════════
+       Elimina los estilos por defecto que aplican los navegadores
+       (márgenes, paddings, tamaños de caja inconsistentes, etc.).
+       Esto garantiza que el diseño se vea igual en Chrome, Firefox,
+       Safari y Edge.
+
+       * { } → selecciona TODOS los elementos HTML de la página
+       box-sizing: border-box → hace que el padding no sume al ancho total
+    ════════════════════════════════════════════════════════════════ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;       /* El padding se incluye dentro del ancho */
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       ESTILOS BASE DEL BODY
+       ══════════════════════════════════════════════════════════════
+       Define la apariencia general de toda la página:
+       · font-family: tipografía por defecto
+       · background/color: colores base
+       · overflow-x: esconde el scroll horizontal (evita desbordamientos)
+       · -webkit-font-smoothing: mejora la renderización de fuentes en Mac
+    ════════════════════════════════════════════════════════════════ */
+    html {
+      scroll-behavior: smooth;      /* Scroll suave al hacer click en links internos */
+    }
+
+    body {
+      font-family: var(--font-main);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--color-black);
+      background-color: var(--color-white);
+      overflow-x: hidden;           /* Evita scroll horizontal no deseado */
+      -webkit-font-smoothing: antialiased;    /* Suaviza fuentes en Mac/iOS */
+      -moz-osx-font-smoothing: grayscale;     /* Suaviza fuentes en Firefox Mac */
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       UTILIDADES GENERALES
+       ══════════════════════════════════════════════════════════════
+       Clases reutilizables en todo el HTML.
+       .container → centra el contenido y le pone un ancho máximo
+       .section    → espaciado vertical estándar para secciones
+    ════════════════════════════════════════════════════════════════ */
+
+    /* Contenedor centrado con ancho máximo */
+    .container {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;               /* Centra horizontalmente */
+      padding: 0 24px;              /* Espaciado lateral en mobile */
+    }
+
+    /* Espaciado vertical de secciones */
+    .section {
+      padding: 80px 0;              /* 80px arriba y abajo en desktop */
+    }
+
+    /* Imagen responsive (no se desborda de su contenedor) */
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* Elimina decoración de links */
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Elimina estilo de listas */
+    ul, ol {
+      list-style: none;
+    }
+
+    /* Botón base (elimina estilos nativos del navegador) */
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: var(--font-main);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       COMPONENTE: BOTONES REUTILIZABLES
+       ══════════════════════════════════════════════════════════════
+       .btn → botón base con propiedades comunes
+       .btn-primary → botón negro con texto blanco (principal)
+       .btn-outline → botón con borde negro y fondo transparente
+       .btn-white → botón blanco con texto negro (sobre fondos oscuros)
+
+       Para cambiar el estilo de todos los botones:
+       · Tamaño del texto → font-size
+       · Relleno interno → padding
+       · Bordes redondeados → border-radius
+       · Velocidad del hover → transition
+    ════════════════════════════════════════════════════════════════ */
+
+    /* Botón base — propiedades comunes */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 32px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;      /* Espaciado entre letras (look premium) */
+      text-transform: uppercase;    /* Todo en mayúsculas */
+      border-radius: 0;             /* Sin bordes redondeados (look angular/moderno) */
+      transition: all var(--transition-fast);
+      cursor: pointer;
+    }
+
+    /* Botón principal: fondo negro, texto blanco */
+    .btn-primary {
+      background-color: var(--color-black);
+      color: var(--color-white);
+      border: 1.5px solid var(--color-black);
+    }
+    /* Hover del botón primario: invierte colores */
+    .btn-primary:hover {
+      background-color: var(--color-white);
+      color: var(--color-black);
+    }
+
+    /* Botón secundario: transparente con borde negro */
+    .btn-outline {
+      background-color: transparent;
+      color: var(--color-black);
+      border: 1.5px solid var(--color-black);
+    }
+    /* Hover del botón outline: rellena de negro */
+    .btn-outline:hover {
+      background-color: var(--color-black);
+      color: var(--color-white);
+    }
+
+    /* Botón blanco: para usar sobre fondos oscuros */
+    .btn-white {
+      background-color: var(--color-white);
+      color: var(--color-black);
+      border: 1.5px solid var(--color-white);
+    }
+    /* Hover del botón blanco: invierte colores */
+    .btn-white:hover {
+      background-color: transparent;
+      color: var(--color-white);
+    }
+
+    /* Botón outline blanco: borde blanco sobre fondos oscuros */
+    .btn-outline-white {
+      background-color: transparent;
+      color: var(--color-white);
+      border: 1.5px solid var(--color-white);
+    }
+    /* Hover: rellena de blanco */
+    .btn-outline-white:hover {
+      background-color: var(--color-white);
+      color: var(--color-black);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       COMPONENTE: TÍTULOS DE SECCIÓN
+       ══════════════════════════════════════════════════════════════
+       .section-title → título grande de sección (h2 o h3 grandes)
+       .section-subtitle → texto descriptivo debajo del título
+       .section-header → contenedor que centra ambos con espaciado
+    ════════════════════════════════════════════════════════════════ */
+
+    /* Contenedor del encabezado de sección */
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    /* Título principal de sección */
+    .section-title {
+      font-family: var(--font-display);  /* Fuente serif elegante */
+      font-size: clamp(28px, 4vw, 42px); /* Tamaño fluido: entre 28px y 42px */
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--color-black);
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+
+    /* Subtítulo de sección (texto descriptivo) */
+    .section-subtitle {
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--color-gray-600);
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* Línea decorativa debajo del título (opcional) */
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background-color: var(--color-black);
+      margin: 16px auto 0;  /* Centra la línea */
+    }
+
+
+    /* ═══════════════════════════════════════════════════════════════
+       ████ SECCIÓN 1: BARRA SUPERIOR (ANNOUNCEMENT BAR) ████
+       ═══════════════════════════════════════════════════════════════
+       Barra delgada en la parte superior de la página.
+       Muestra promociones: envío gratis y descuento.
+
+       Para modificar:
+       · Cambiar texto → ir al HTML y buscar <div class="topbar">
+       · Cambiar fondo → background-color en .topbar
+       · Cambiar color de texto → color en .topbar
+       · Ocultar la barra → agregar display: none a .topbar
+    ════════════════════════════════════════════════════════════════ */
+
+    /* Contenedor principal de la barra superior */
+    .topbar {
+      background-color: var(--color-white);
+      border-bottom: 1px solid var(--color-gray-200);  /* Línea gris suave inferior */
+      padding: 10px 0;
+      position: relative;  /* Para posicionar el texto derecho */
+      z-index: 200;         /* Por encima del resto del contenido */
+    }
+
+    /* Layout interno: flex para distribuir los textos */
+    .topbar__inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;  /* Centra el mensaje principal */
+      position: relative;        /* Para posicionar el texto derecho con absolute */
+      padding: 0 24px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    /* Mensaje principal centrado (envío gratis) */
+    .topbar__center {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--color-black);
+      text-align: center;
+    }
+
+    /* Mensaje secundario a la derecha (20% off) */
+    .topbar__right {
+      position: absolute;    /* Se posiciona a la derecha del contenedor */
+      right: 24px;           /* Distancia desde el borde derecho */
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--color-gray-800);
+      white-space: nowrap;   /* Evita que el texto haga salto de línea */
+    }
+
+
+    /* ═══════════════════════════════════════════════════════════════
+       ████ SECCIÓN 2: HEADER / NAVEGACIÓN ████
+       ═══════════════════════════════════════════════════════════════
+       Barra de navegación principal.
+       Es "sticky" → queda fija en la parte superior al hacer scroll.
+
+       Para modificar:
+       · Cambiar logo → buscar .header__logo en el HTML
+       · Cambiar ítems del menú → buscar <nav class="header__nav">
+       · Cambiar altura del header → height en .header
+       · Activar fondo con blur → descomentar backdrop-filter
+    ════════════════════════════════════════════════════════════════ */
+
+    /* Contenedor del header */
+    .header {
+      position: sticky;         /* Queda pegado al top al hacer scroll */
+      top: 0;                    /* Pegado al borde superior */
+      z-index: 100;              /* Por encima del contenido normal */
+      background-color: var(--color-white);
+      border-bottom: 1px solid var(--color-gray-200);
+      transition: box-shadow var(--transition-fast);
+    }
+
+    /* Sombra que aparece cuando el header hace scroll (añadida con JS) */
+    .header.scrolled {
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Layout interno del header: tres columnas (izq, centro, der) */
+    .header__inner {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;  /* Izq flexible, centro auto, der flexible */
+      align-items: center;
+      padding: 0 24px;
+      height: 70px;             /* Altura del header — cambiá este valor para ajustar */
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    /* ── Lado izquierdo del header ── */
+    .header__left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* Botón hamburguesa (menú mobile) */
+    .header__hamburger {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 8px;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    /* Cada línea del ícono hamburguesa */
+    .header__hamburger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;             /* Grosor de las líneas — cambiá para más/menos grosor */
+      background-color: var(--color-black);
+      transition: all var(--transition-fast);
+    }
+
+    /* Animación hamburguesa → X cuando el menú está abierto */
+    .header__hamburger.active span:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+    }
+    .header__hamburger.active span:nth-child(2) {
+      opacity: 0;               /* Línea del medio desaparece */
+      transform: translateX(-10px);
+    }
+    .header__hamburger.active span:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+    }
+
+    /* ── Centro del header (logo y lema) ── */
+    .header__center {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    /* Logo textual NOVAstreet */
+    .header__logo {
+      font-family: var(--font-display);   /* Fuente serif del logo */
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--color-black);
+      line-height: 1;
+    }
+
+    /* Lema debajo del logo */
+    .header__tagline {
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.2em;      /* Mucho espaciado entre letras → look premium */
+      color: var(--color-gray-600);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ── Lado derecho del header (íconos) ── */
+    .header__right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;  /* Íconos pegados a la derecha */
+      gap: 8px;
+    }
+
+    /* Botón de ícono genérico (búsqueda, cuenta, carrito) */
+    .header__icon-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      position: relative;         /* Para el badge del carrito */
+      color: var(--color-black);
+      transition: opacity var(--transition-fast);
+      border-radius: 50%;
+    }
+
+    /* Hover sobre íconos del header */
+    .header__icon-btn:hover {
+      opacity: 0.6;
+    }
+
+    /* SVG de los íconos: tamaño */
+    .header__icon-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    /* Badge rojo del carrito (número de productos) */
+    .cart-badge {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      min-width: 16px;
+      height: 16px;
+      background-color: var(--color-black);
+      color: var(--color-white);
+      font-size: 9px;
+      font-weight: 700;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 2px;
+    }
+
+    /* ── Menú de navegación desktop ── */
+    /* (aparece en el menú mobile lateral) */
+    .nav-menu {
+      position: fixed;            /* Fijo en la pantalla */
+      top: 0;
+      left: -100%;               /* Fuera de la pantalla hacia la izquierda */
+      width: 100%;
+      max-width: 380px;
+      height: 100vh;
+      background-color: var(--color-white);
+      z-index: 300;
+      padding: 80px 48px 48px;
+      transition: left var(--transition-med);
+      border-right: 1px solid var(--color-gray-200);
+      overflow-y: auto;
+    }
+
+    /* Estado activo del menú (visible) */
+    .nav-menu.active {
+      left: 0;                   /* Entra a la pantalla */
+    }
+
+    /* Overlay oscuro detrás del menú cuando está abierto */
+    .nav-overlay {
+      position: fixed;
+      inset: 0;                  /* Cubre toda la pantalla */
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 250;
+      opacity: 0;
+      pointer-events: none;      /* No intercepta clicks cuando está invisible */
+      transition: opacity var(--transition-med);
+    }
+
+    /* Estado activo del overlay */
+    .nav-overlay.active {
+      opacity: 1;
+      pointer-events: all;       /* Intercepta clicks → cierra el menú al clickear afuera */
+    }
+
+    /* Botón de cierre del menú lateral */
+    .nav-menu__close {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 24px;
+      color: var(--color-black);
+      background: none;
+      border: none;
+    }
+
+    /* Logo dentro del menú lateral */
+    .nav-menu__logo {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin-bottom: 48px;
+      display: block;
+    }
+
+    /* Lista de ítems del menú */
+    .nav-menu__list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* Cada ítem del menú */
+    .nav-menu__item {
+      border-bottom: 1px solid var(--color-gray-100);
+    }
+
+    /* Link de cada ítem */
+    .nav-menu__link {
+      display: block;
+      padding: 18px 0;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--color-black);
+      text-transform: uppercase;
+      transition: color var(--transition-fast);
+    }
+
+    /* Hover del link del menú */
+    .nav-menu__link:hover {
+      color: var(--color-gray-400);
+    }
+
+    /* Texto adicional del menú (redes sociales, etc.) */
+    .nav-menu__footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--color-gray-200);
+    }
+
+    .nav-menu__footer p {
+      font-size: 12px;
+      color: var(--color-gray-400);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    /* ── Links de redes sociales en el menú ── */
+    .nav-social-links {
+      display: flex;
+      gap: 16px;
+    }
+
+    .nav-social-links a {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-black);
+      border-bottom: 1px solid var(--color-black);
+      padding-bottom: 2px;
+      transition: opacity var(--transition-fast);
+    }
+
+    .nav-social-links a:hover {
+      opacity: 0.5;
+    }
+
+
+    /* ═══════════════════════════════════════════════════════════════
+       ████ SECCIÓN 3: HERO (PANTALLA COMPLETA) ████
+       ═══════════════════════════════════════════════════════════════
+       Sección principal de la página. Ocupa toda la pantalla.
+       Tiene una imagen de fondo con overlay oscuro.
+
+       Para modificar:
+       · Cambiar la imagen → ir al HTML y cambiar la URL en style="background-image..."
+       · Cambiar oscuridad del overlay → --overlay-opacity en .hero::after
+       · Cambiar el texto → buscar .hero__title y .hero__subtitle en el HTML
+       · Cambiar la altura → height en .hero (actualmente 100vh = pantalla completa)
+    ════════════════════════════════════════════════════════════════ */
+
+    /* Contenedor del hero */
+    .hero {
+      position: relative;
+      height: 100vh;              /* 100% de la altura de la pantalla */
+      min-height: 600px;          /* Mínimo 600px en pantallas muy pequeñas */
+      display: flex;
+      align-items: center;        /* Centra el contenido verticalmente */
+      justify-content: center;
+      overflow: hidden;
+      background-color: var(--color-gray-900);  /* Fallback si la imagen no carga */
+    }
+
+    /* Imagen de fondo del hero */
+    .hero__bg {
+      position: absolute;
+      inset: 0;                   /* Cubre todo el contenedor */
+      background-image: url('https://images.unsplash.com/photo-1536766820879-059fec98ec0a?w=1800&q=80');
+      background-size: cover;     /* La imagen cubre todo el espacio */
+      background-position: center center;
+      background-repeat: no-repeat;
+      transform: scale(1);
+      transition: transform 8s ease;  /* Animación zoom muy lenta al cargar */
+    }
+
+    /* Efecto zoom de la imagen al cargar la página */
+    .hero.loaded .hero__bg {
+      transform: scale(1.05);     /* Zoom sutil → cambiar 1.05 para más/menos zoom */
+    }
+
+    /* Overlay oscuro sobre la imagen (mejora la legibilidad del texto) */
+    /* Para oscurecer más: aumentar el valor de opacity (máx 1) */
+    /* Para oscurecer menos: reducir el valor de opacity (mín 0) */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.35) 0%,   /* Más oscuro arriba */
+        rgba(0, 0, 0, 0.45) 50%,  /* Oscuridad media en el centro */
+        rgba(0, 0, 0, 0.60) 100%  /* Más oscuro abajo */
+      );
+    }
+
+    /* Contenido del hero (texto y botones) */
+    .hero__content {
+      position: relative;         /* Por encima del overlay (z-index) */
+      z-index: 10;
+      text-align: center;
+      padding: 0 24px;
+      max-width: 800px;
+    }
+
+    /* Etiqueta pequeña sobre el título (ej: "Colección 2025") */
+    .hero__label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 6px 16px;
+    }
+
+    /* Título principal del hero */
+    .hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(42px, 7vw, 90px);  /* Tamaño fluido: 42px mobile → 90px desktop */
+      font-weight: 700;
+      color: var(--color-white);
+      line-height: 1.05;
+      margin-bottom: 24px;
+      letter-spacing: -0.02em;
+    }
+
+    /* Subtítulo del hero */
+    .hero__subtitle {
+      font-size: clamp(15px, 2vw, 18px);
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 48px;
+      line-height: 1.6;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Contenedor de los dos botones del hero */
+    .hero__buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;            /* Se apilan verticalmente en mobile */
+    }
+
+    /* Flecha decorativa que indica que hay más contenido abajo */
+    .hero__scroll {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: bounce 2s infinite;  /* Animación de rebote */
+    }
+
+    /* Texto "scroll" */
+    .hero__scroll span {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Línea vertical que indica scroll */
+    .hero__scroll-line {
+      width: 1px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.4);
+      animation: scrollLine 2s infinite;
+    }
+
+    /* ── Animaciones del hero ── */
+
+    /* Rebote suave del indicador de scroll */
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-8px); }
+    }
+
+    /* Línea de scroll que aparece y sube */
+    @keyframes scrollLine {
+      0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
+      50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+      100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+    }
+
+
+    /* ═══════════════════════════════════════════════════════════════
+       ████ SECCIÓN 4: CATEGORÍAS ████
+       ═══════════════════════════════════════════════════════════════
+       Tres tarjetas grandes con imagen y hover zoom.
+
+       Para modificar:
+       · Cambiar imágenes → buscar .category-card en el HTML y cambiar URLs
+       · Cambiar altura de las tarjetas → height en .category-card
+       · Cambiar el zoom del hover → scale() en .category-card:hover .category-card__img
+       · Agregar/quitar categorías → copiar/borrar un <div class="category-card">
+    ════════════════════════════════════════════════════════════════ */
+
+    /* Fondo de la sección de categorías */
+    .categories {
+      background-color: var(--color-gray-50);
+    }
+
+    /* Grid de tres columnas para las categorías */
+    .categories__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);  /* 3 columnas iguales */
+      gap: 16px;
+    }
+
+    /* Tarjeta de categoría */
+    .category-card {
+      position: relative;
+      height: 500px;              /* Altura de la tarjeta — cambiá para ajustar */
+      overflow: hidden;           /* Necesario para que el zoom no desborde */
+      cursor: pointer;
+      background-color: var(--color-gray-100);
+    }
+
+    /* Imagen de fondo de la tarjeta */
+    .category-card__img {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.7s ease;  /* Transición del zoom — cambiá el tiempo para más lento/rápido */
+    }
+
+    /* Zoom de la imagen al hacer hover sobre la tarjeta */
+    .category-card:hover .category-card__img {
+      transform: scale(1.08);    /* 1.08 = 8% de zoom — aumentá para más zoom */
+    }
+
+    /* Overlay oscuro de la tarjeta (para legibilidad del texto) */
+    .category-card__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.6) 0%,   /* Oscuro abajo (donde está el texto) */
+        rgba(0, 0, 0, 0.1) 60%,  /* Casi transparente arriba */
+        transparent 100%
+      );
+      transition: background var(--transition-med);
+    }
+
+    /* El overlay se oscurece más en hover */
+    .category-card:hover .category-card__overlay {
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.75) 0%,
+        rgba(0, 0, 0, 0.2) 60%,
+        transparent 100%
+      );
+    }
+
+    /* Contenido de texto dentro de la tarjeta */
+    .category-card__content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 32px;
+      z-index: 10;
+    }
+
+    /* Etiqueta pequeña sobre el nombre */
+    .category-card__label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 8px;
+    }
+
+    /* Nombre de la categoría */
+    .category-card__name {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--color-white);
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+
+    /* Botón "ver categoría" (inicialmente invisible) */
+    .category-card__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-white);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+      padding-bottom: 2px;
+      opacity: 0;               /* Invisible inicialmente */
+      transform: translateY(8px);
+      transition: opacity var(--transition-fast), transform var(--transition-fast);
+    }
+
+    /* El botón aparece al hacer hover sobre la tarjeta */
+    .category-card:hover .category-card__btn {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+
+    /* ═══════════════════════════════════════════════════════════════
+       ████ SECCIÓN 5: PRODUCTOS DESTACADOS ████
+       ═══════════════════════════════════════════════════════════════
+       Grilla de productos con imagen, nombre, precio y botón de compra.
+
+       Para modificar:
+       · Cambiar número de columnas → grid-template-columns en .products__grid
+       · Cambiar aspecto ratio de la imagen → padding-bottom en .product-card__image
+       · Agregar productos → copiar un <div class="product-card"> en el HTML
+       · Cambiar el número de WhatsApp → buscar "wa.me/" en el HTML o en el JS
+    ════════════════════════════════════════════════════════════════ */
+
+    /* Fondo de la sección de productos */
+    .products {
+      background-color: var(--color-white);
+    }
+
+    /* Grilla responsive de productos */
+    /* En desktop: 4 columnas → 3 → 2 → 1 (según breakpoints) */
+    .products__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);  /* 4 productos por fila en desktop */
+      gap: 24px;
+    }
+
+    /* Tarjeta de producto */
+    .product-card {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Contenedor de la imagen del producto */
+    .product-card__image {
+      position: relative;
+      overflow: hidden;
+      background-color: var(--color-gray-100);
+      /* padding-bottom crea un aspecto ratio fijo (1:1.2 = retrato) */
+      /* Cambiá el número para cambiar la proporción:
+         100% = cuadrado | 120% = retrato | 80% = paisaje */
+      padding-bottom: 120%;
+      margin-bottom: 0;
+    }
+
+    /* La imagen dentro del contenedor */
+    .product-card__img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;          /* La imagen cubre todo sin deformarse */
+      transition: transform 0.6s ease;
+    }
+
+    /* Zoom suave de la imagen al hacer hover */
+    .product-card:hover .product-card__img {
+      transform: scale(1.04);
+    }
+
+    /* Badge "NUEVO" o "OFERTA" sobre la imagen */
+    .product-card__badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background-color: var(--color-black);
+      color: var(--color-white);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      z-index: 5;
+    }
+
+    /* Overlay que aparece al hacer hover → muestra el botón de compra */
+    .product-card__overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+      opacity: 0;                 /* Invisible inicialmente */
+      transition: opacity var(--transition-fast);
+      z-index: 10;
+    }
+
+    /* El overlay se vuelve visible en hover */
+    .product-card:hover .product-card__overlay {
+      opacity: 1;
+    }
+
+    /* Botón de "agregar al carrito" dentro del overlay */
+    .product-card__quick-add {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--color-white);
+      color: var(--color-black);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: background-color var(--transition-fast);
+      transform: translateY(8px);
+      transition: all var(--transition-fast);
+    }
+
+    /* Al hacer hover sobre el botón del overlay */
+    .product-card__quick-add:hover {
+      background-color: var(--color-black);
+      color: var(--color-white);
+    }
+
+    /* El botón sube suavemente al aparecer */
+    .product-card:hover .product-card__quick-add {
+      transform: translateY(0);
+    }
+
+    /* Información del producto (debajo de la imagen) */
+    .product-card__info {
+      padding: 16px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;                    /* Ocupa el espacio restante */
+    }
+
+    /* Nombre del producto */
+    .product-card__name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-black);
+      letter-spacing: 0.02em;
+      line-height: 1.3;
+    }
+
+    /* Precio del producto */
+    .product-card__price {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-black);
+    }
+
+    /* Precio anterior tachado (cuando hay descuento) */
+    .product-card__price-old {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--color-gray-400);
+      text-decoration: line-through;
+      margin-left: 6px;
+    }
+
+    /* Botón de compra (WhatsApp) debajo del precio */
+    .product-card__btn {
+      margin-top: 8px;
+      width: 100%;
+    }
+
+
+    /* ═══════════════════════════════════════════════════════════════
+       ████ SECCIÓN 6: BENEFICIOS ████
+       ═══════════════════════════════════════════════════════════════
+       Barra horizontal con 4 íconos y textos de beneficios.
+    ════════════════════════════════════════════════════════════════ */
+
+    /* Fondo de la sección de beneficios */
+    .benefits {
+      background-color: var(--color-white);
+      border-top: 1px solid var(--color-gray-200);
+      border-bottom: 1px solid var(--color-gray-200);
+      padding: 48px 0;            /* Menos padding que las secciones normales */
+    }
+
+    /* Grid de 4 columnas para los beneficios */
+    .benefits__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+
+    /* Cada ítem de beneficio */
+    .benefit-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+    }
+
+    /* Ícono/emoji del beneficio */
+    .benefit-item__icon {
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    /* Nombre del beneficio */
+    .benefit-item__title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--color-black);
+    }
+
+    /* Descripción del beneficio */
+    .benefit-item__desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--color-gray-600);
+      line-height: 1.5;
+    }
+
+
+    /* ═══════════════════════════════════════════════════════════════
+       ████ SECCIÓN 7: BANNER PROMOCIONAL ████
+       ═══════════════════════════════════════════════════════════════
+       Banner de ancho completo con fondo negro y texto blanco.
+
+       Para modificar:
+       · Cambiar fondo → background-color en .promo-banner
+       · Cambiar imagen → agregar background-image en .promo-banner
+       · Cambiar el texto → buscar .promo-banner__title en el HTML
+    ════════════════════════════════════════════════════════════════ */
+
+    /* Contenedor del banner promocional */
+    .promo-banner {
+      background-color: var(--color-black);  /* Fondo negro */
+      padding: 80px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Elemento decorativo (línea) detrás del contenido */
+    .promo-banner::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+    }
+
+    /* Contenido del banner (por encima del decorativo) */
+    .promo-banner__inner {
+      position: relative;
+      z-index: 10;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Etiqueta pequeña */
+    .promo-banner__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 16px;
+    }
+
+    /* Título del banner */
+    .promo-banner__title {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 700;
+      color: var(--color-white);
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    /* Número del descuento en color gris muy claro */
+    .promo-banner__title .highlight {
+      color: rgba(255, 255, 255, 0.5);  /* Gris claro — cambiá para diferente acento */
+    }
+
+    /* Descripción del banner */
+    .promo-banner__desc {
+      font-size: 15px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 40px;
+      line-height: 1.7;
+    }
+
+
+    /* ═══════════════════════════════════════════════════════════════
+       ████ SECCIÓN 8: SOMOS NOVAstreet (ABOUT) ████
+       ═══════════════════════════════════════════════════════════════
+       Sección "quiénes somos" con texto e imagen.
+
+       Para modificar:
+       · Cambiar imagen → buscar .about__image en el HTML y cambiar la URL
+       · Cambiar el texto → buscar <div class="about__text"> en el HTML
+    ════════════════════════════════════════════════════════════════ */
+
+    /* Fondo de la sección about */
+    .about {
+      background-color: var(--color-gray-50);
+    }
+
+    /* Layout de dos columnas: imagen a la izquierda, texto a la derecha */
+    .about__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;   /* Dos columnas iguales */
+      gap: 80px;
+      align-items: center;
+    }
+
+    /* Contenedor de la imagen */
+    .about__image {
+      position: relative;
+      overflow: hidden;
+      height: 600px;
+    }
+
+    /* La imagen del about */
+    .about__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    /* Elemento decorativo sobre la imagen */
+    .about__image::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      width: 100px;
+      height: 100px;
+      border: 1px solid var(--color-gray-300);
+    }
+
+    /* Bloque de texto del about */
+    .about__text {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Etiqueta pequeña */
+    .about__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--color-gray-400);
+    }
+
+    /* Título del about */
+    .about__title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 3.5vw, 42px);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    /* Párrafo de texto del about */
+    .about__desc {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--color-gray-600);
+      line-height: 1.8;
+    }
+
+    /* Estadísticas (números destacados) */
+    .about__stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--color-gray-200);
+      margin-top: 8px;
+    }
+
+    /* Cada estadística */
+    .about__stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    /* Número de la estadística */
+    .about__stat-number {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--color-black);
+    }
+
+    /* Label de la estadística */
+    .about__stat-label {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--color-gray-600);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+
+    /* ═══════════════════════════════════════════════════════════════
+       ████ SECCIÓN 9: TESTIMONIOS ████
+       ═══════════════════════════════════════════════════════════════
+       Tres tarjetas de reseñas de clientes.
+
+       Para modificar:
+       · Agregar testimonios → copiar una <div class="testimonial-card"> en el HTML
+       · Cambiar número de columnas → grid-template-columns en .testimonials__grid
+    ════════════════════════════════════════════════════════════════ */
+
+    /* Fondo de la sección de testimonios */
+    .testimonials {
+      background-color: var(--color-white);
+    }
+
+    /* Grid de tres testimonios */
+    .testimonials__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    /* Tarjeta de testimonio */
+    .testimonial-card {
+      background-color: var(--color-gray-50);
+      padding: 32px;
+      border: 1px solid var(--color-gray-200);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      transition: border-color var(--transition-fast);
+    }
+
+    /* Hover: resalta el borde de la tarjeta */
+    .testimonial-card:hover {
+      border-color: var(--color-gray-400);
+    }
+
+    /* Estrellas de calificación */
+    .testimonial-card__stars {
+      color: var(--color-black);
+      font-size: 14px;
+      letter-spacing: 2px;
+    }
+
+    /* Texto del testimonio */
+    .testimonial-card__text {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--color-gray-800);
+      line-height: 1.7;
+      font-style: italic;
+      flex: 1;
+    }
+
+    /* Información del cliente */
+    .testimonial-card__author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-top: 1px solid var(--color-gray-200);
+      padding-top: 20px;
+    }
+
+    /* Avatar del cliente (iniciales) */
+    .testimonial-card__avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background-color: var(--color-black);
+      color: var(--color-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    /* Nombre y ciudad del cliente */
+    .testimonial-card__name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-black);
+    }
+
+    .testimonial-card__location {
+      font-size: 12px;
+      color: var(--color-gray-400);
+      margin-top: 2px;
+    }
+
+
+    /* ═══════════════════════════════════════════════════════════════
+       ████ SECCIÓN 10: FOOTER ████
+       ═══════════════════════════════════════════════════════════════
+       Pie de página con fondo negro y texto blanco.
+
+       Para modificar:
+       · Cambiar fondo → background-color en .footer
+       · Agregar columnas → copiar una <div class="footer__col"> en el HTML
+       · Cambiar redes sociales → buscar .footer__social en el HTML
+    ════════════════════════════════════════════════════════════════ */
+
+    /* Contenedor del footer */
+    .footer {
+      background-color: var(--color-black);   /* Fondo negro */
+      color: var(--color-white);
+      padding: 80px 0 0;
+    }
+
+    /* Grid de columnas del footer */
+    .footer__grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;  /* Primera columna más ancha */
+      gap: 48px;
+      padding-bottom: 60px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Columna de información de marca (primera columna) */
+    .footer__brand {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Logo en el footer */
+    .footer__logo {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--color-white);
+    }
+
+    /* Lema en el footer */
+    .footer__tagline {
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+    }
+
+    /* Descripción de la marca */
+    .footer__desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.7;
+      max-width: 280px;
+    }
+
+    /* Redes sociales del footer */
+    .footer__social {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    /* Link de red social */
+    .footer__social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: all var(--transition-fast);
+    }
+
+    /* Hover sobre ícono social */
+    .footer__social a:hover {
+      background-color: var(--color-white);
+      color: var(--color-black);
+      border-color: var(--color-white);
+    }
+
+    /* Columna de navegación (segunda, tercera, cuarta columna) */
+    .footer__col {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Título de cada columna del footer */
+    .footer__col-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-white);
+    }
+
+    /* Lista de links de cada columna */
+    .footer__col-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Link de cada columna del footer */
+    .footer__col-list a {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.6);
+      transition: color var(--transition-fast);
+    }
+
+    /* Hover sobre links del footer */
+    .footer__col-list a:hover {
+      color: var(--color-white);
+    }
+
+    /* Barra inferior del footer (copyright) */
+    .footer__bottom {
+      padding: 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    /* Texto de copyright */
+    .footer__copyright {
+      font-size: 12px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.4);
+      letter-spacing: 0.05em;
+    }
+
+    /* Links legales (privacidad, términos) */
+    .footer__legal {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer__legal a {
+      font-size: 12px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.4);
+      transition: color var(--transition-fast);
+    }
+
+    .footer__legal a:hover {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+
+    /* ══════════════════════════════════════════════════════════════
+       ANIMACIONES DE ENTRADA (SCROLL)
+       ══════════════════════════════════════════════════════════════
+       Los elementos con clase .animate-on-scroll empiezan invisibles
+       y se animan cuando entran en el viewport (área visible).
+       Esto crea el efecto de "revelación" al hacer scroll.
+
+       .fade-up   → aparece subiendo desde abajo
+       .fade-in   → aparece con fade simple
+       .is-visible → clase que agrega el JS cuando el elemento es visible
+    ════════════════════════════════════════════════════════════════ */
+
+    /* Estado inicial: invisible y desplazado hacia abajo */
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(30px);   /* Empieza 30px más abajo — cambiá para más/menos */
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    /* Estado final: visible y en posición normal */
+    .animate-on-scroll.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Delays para animar elementos en secuencia (efecto cascada) */
+    /* Cada elemento espera un poco más que el anterior */
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .delay-4 { transition-delay: 0.4s; }
+
+
+    /* ══════════════════════════════════════════════════════════════
+       RESPONSIVE — MEDIA QUERIES
+       ══════════════════════════════════════════════════════════════
+       Adaptaciones del diseño para distintos tamaños de pantalla.
+
+       BREAKPOINTS usados:
+       · 1024px → Laptops pequeñas / tablets landscape
+       · 768px  → Tablets portrait
+       · 480px  → Celulares grandes
+       · 360px  → Celulares pequeños
+
+       Cómo funcionan:
+       @media (max-width: XXXpx) { }
+       → Los estilos dentro se aplican cuando la pantalla es MENOR a XXX píxeles.
+       → Los estilos fuera (arriba de esta línea) se aplican en desktop.
+    ════════════════════════════════════════════════════════════════ */
+
+    /* ── TABLET LANDSCAPE y LAPTOPS PEQUEÑAS (hasta 1024px) ── */
+    @media (max-width: 1024px) {
+
+      /* La sección hero tiene menos altura en tablets */
+      .hero {
+        min-height: 100svh;   /* svh = small viewport height, mejor en mobile */
+      }
+
+      /* Categorías: 3 columnas pequeñas */
+      .categories__grid {
+        gap: 8px;
+      }
+
+      /* Categorías: tarjetas más bajas */
+      .category-card {
+        height: 400px;
+      }
+
+      /* Productos: 3 columnas en lugar de 4 */
+      .products__grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+
+      /* Beneficios: 2 columnas en lugar de 4 */
+      .benefits__grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+
+      /* About: dos columnas pero con menos gap */
+      .about__inner {
+        gap: 40px;
+      }
+
+      /* Footer: menos columnas */
+      .footer__grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+
+      /* La columna de marca ocupa todo el ancho */
+      .footer__brand {
+        grid-column: 1 / -1;  /* Se expande a las dos columnas */
+      }
+    }
+
+    /* ── TABLET PORTRAIT (hasta 768px) ── */
+    @media (max-width: 768px) {
+
+      /* Secciones con menos padding vertical */
+      .section {
+        padding: 60px 0;
+      }
+
+      /* Header más bajo en mobile */
+      .header__inner {
+        height: 60px;
+      }
+
+      /* Topbar: ocultar el texto derecho en mobile (poco espacio) */
+      .topbar__right {
+        display: none;
+      }
+
+      /* Categorías: 1 columna grande en mobile */
+      .categories__grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      /* Categorías: tarjetas más bajas en mobile */
+      .category-card {
+        height: 280px;
+      }
+
+      /* Productos: 2 columnas en mobile */
+      .products__grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      /* About: una sola columna en mobile */
+      .about__inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      /* About: imagen más baja en mobile */
+      .about__image {
+        height: 400px;
+      }
+
+      /* Testimonios: 1 columna en mobile */
+      .testimonials__grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* Footer: una sola columna */
+      .footer__grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .footer__brand {
+        grid-column: 1;  /* Resetear la expansión */
+      }
+    }
+
+    /* ── CELULARES GRANDES (hasta 480px) ── */
+    @media (max-width: 480px) {
+
+      /* Secciones aún más compactas */
+      .section {
+        padding: 48px 0;
+      }
+
+      /* Logo más pequeño */
+      .header__logo {
+        font-size: 18px;
+      }
+
+      /* Lema oculto en pantallas muy pequeñas */
+      .header__tagline {
+        display: none;
+      }
+
+      /* Botones del hero en columna */
+      .hero__buttons {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 280px;
+        margin: 0 auto;
+      }
+
+      /* Botones de ancho completo en mobile */
+      .hero__buttons .btn {
+        width: 100%;
+        text-align: center;
+      }
+
+      /* Productos: 1 columna en celulares muy pequeños */
+      .products__grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* Beneficios: 1 columna en mobile pequeño */
+      .benefits__grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* Estadísticas del about: 1 columna */
+      .about__stats {
+        grid-template-columns: 1fr;
+      }
+
+      /* Banner: padding reducido */
+      .promo-banner {
+        padding: 60px 24px;
+      }
+    }
+
+    /* ── CELULARES MUY PEQUEÑOS (hasta 360px) ── */
+    @media (max-width: 360px) {
+      .container {
+        padding: 0 16px;    /* Menos margen lateral en pantallas muy pequeñas */
+      }
+
+      .header__inner {
+        padding: 0 16px;
+      }
+    }
+
+    /* ── PANTALLAS EXTRA GRANDES (desde 1600px) ── */
+    @media (min-width: 1600px) {
+      /* Categorías: tarjetas más altas en pantallas grandes */
+      .category-card {
+        height: 600px;
+      }
+    }
+
+    /* ── PANTALLAS ULTRA WIDE (desde 2000px) ── */
+    @media (min-width: 2000px) {
+      /* El contenido ya tiene max-width, así que solo ajustamos fuentes */
+      body {
+        font-size: 17px;
+      }
+
+      .category-card {
+        height: 700px;
+      }
+    }
